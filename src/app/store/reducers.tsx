@@ -5,9 +5,20 @@ export const todoSlice = createSlice({
   initialState: [{ name: 'Not found' }],
   reducers: {
     getAllTodos: (state, action) => {
-      console.log(action.payload);
       return action.payload;
     },
   },
 });
 export const { getAllTodos } = todoSlice.actions;
+
+export const filterSlice = createSlice({
+  name: '@@filter',
+  initialState: 'all',
+  reducers: {
+    setFilter: (_, action) => {
+      console.log(action.payload);
+      return action.payload;
+    },
+  },
+});
+export const { setFilter } = filterSlice.actions;

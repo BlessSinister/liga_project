@@ -1,11 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
 import { useDispatch, useSelector } from 'react-redux';
+import { useGetTasksQuery } from '../../api/tasksApi';
 import { PageContainer } from 'components/PageContainer';
 import { SearchInput } from 'components/SearchInput';
 import { getAllTodos, setFilter } from 'app/store/reducers';
+import { Filter } from 'components/Filter';
 
 function TaskList() {
+  const { data } = useGetTasksQuery();
+  const dispatch = useDispatch();
   const state = useSelector(({ todos }) => todos);
   const activeFilter = useSelector((state) => state.filter);
   const filteredTodos = state.filter((item) => {
@@ -19,7 +22,7 @@ function TaskList() {
       return item.isCompleted == false;
     }
   });
-  const dispatch = useDispatch();
+
   const [searchValue, setSearchValue] = useState('');
   function handleChange(value) {
     return setSearchValue(value);
@@ -27,29 +30,18 @@ function TaskList() {
   function onReset() {
     setSearchValue('');
   }
-  const fn = async () => {
-    let res = await axios.get('https://tasks-service-maks1394.amvera.io/tasks');
-    dispatch(getAllTodos(res.data));
-  };
-
-  const styleButton = {
-    backgroundColor: 'rgb(37, 202, 240)',
-    borderColor: 'rgb(49, 202, 240)',
-    borderWidth: '2px',
-    borderStyle: 'solid',
-    outline: 'rgb(49, 202, 240)',
-  };
   useEffect(() => {
-    fn();
-  }, []);
-
+    if (data) {
+      dispatch(getAllTodos(data));
+    }
+  }, [data]);
   return (
     <PageContainer>
       <h1>TODO LIST</h1>
       <div style={{ display: 'flex', justifyContent: 'space-between' }}>
         <SearchInput value={searchValue} onChange={handleChange} onReset={onReset} />
-
-        <form className="search-form d-flex justify-content-between">
+        <Filter />
+        {/* <form className="search-form d-flex justify-content-between">
           <div className="btn-group" style={{ marginRight: '1.2rem' }}>
             <button
               type="button"
@@ -85,7 +77,7 @@ function TaskList() {
               Find
             </button>
           </div>
-        </form>
+        </form> */}
       </div>
       {filteredTodos.map((item, index) => (
         <div key={index}>

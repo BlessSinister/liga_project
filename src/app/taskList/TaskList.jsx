@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useGetTasksQuery } from '../../api/tasksApi';
 import { PageContainer } from 'components/PageContainer';
 import { SearchInput } from 'components/SearchInput';
-import { getAllTodos, setFilter } from 'app/store/reducers';
+import { getAllTodos } from 'app/store/reducers';
 import { Filter } from 'components/Filter';
 
 function TaskList() {

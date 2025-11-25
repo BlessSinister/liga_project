@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { Link } from 'react-router-dom';
 import { useGetTasksQuery } from '../../api/tasksApi';
+import SearchField from './components/searchField/SearchField';
 import { PageContainer } from 'components/PageContainer';
-import { SearchInput } from 'components/SearchInput';
 import { getAllTodos } from 'app/store/reducers';
 import { Filter } from 'components/Filter';
 
@@ -10,8 +11,10 @@ function TaskList() {
   const { data } = useGetTasksQuery();
   const dispatch = useDispatch();
   const state = useSelector(({ todos }) => todos);
+  const searchState = useSelector((state) => state.search.value);
+  console.log(searchState.length);
   const activeFilter = useSelector((state) => state.filter);
-  const filteredTodos = state.filter((item) => {
+  let filteredTodos = state.filter((item) => {
     if (activeFilter == 'all') {
       return item;
     } else if (activeFilter == 'done') {
@@ -22,13 +25,8 @@ function TaskList() {
       return item.isCompleted == false;
     }
   });
-
-  const [searchValue, setSearchValue] = useState('');
-  function handleChange(value) {
-    return setSearchValue(value);
-  }
-  function onReset() {
-    setSearchValue('');
+  if (searchState.length > 0) {
+    filteredTodos = filteredTodos.filter((item) => item.name == searchState);
   }
   useEffect(() => {
     if (data) {
@@ -39,57 +37,23 @@ function TaskList() {
     <PageContainer>
       <h1>TODO LIST</h1>
       <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-        <SearchInput value={searchValue} onChange={handleChange} onReset={onReset} />
-        <Filter />
-        {/* <form className="search-form d-flex justify-content-between">
-          <div className="btn-group" style={{ marginRight: '1.2rem' }}>
-            <button
-              type="button"
-              className="btn btn-outline-secondary"
-              onClick={() => dispatch(setFilter('all'))}
-              style={activeFilter == 'all' ? styleButton : { backgroundColor: 'white' }}>
-              All
-            </button>
-            <button
-              type="button"
-              className="btn btn-info"
-              onClick={() => dispatch(setFilter('active'))}
-              style={activeFilter == 'active' ? styleButton : { backgroundColor: 'white' }}>
-              Active
-            </button>
-            <button
-              type="button"
-              className="btn btn-outline-secondary"
-              onClick={() => dispatch(setFilter('done'))}
-              style={activeFilter == 'done' ? styleButton : { backgroundColor: 'white' }}>
-              Done
-            </button>
-            <button
-              type="button"
-              className="btn btn-outline-secondary"
-              onClick={() => dispatch(setFilter('important'))}
-              style={activeFilter == 'important' ? styleButton : { backgroundColor: 'white' }}>
-              Important
-            </button>
-          </div>
-          <div>
-            <button type="submit" className="btn btn-primary">
-              Find
-            </button>
-          </div>
-        </form> */}
+        <SearchField>
+          <Filter />
+        </SearchField>
       </div>
       {filteredTodos.map((item, index) => (
         <div key={index}>
           <ul>
-            <li>{item.name}</li>
+            <li>
+              <Link to={`/edit/${item.id}`}>{item.name}</Link>
+            </li>
             <li>{item.id}</li>
           </ul>
         </div>
       ))}
-      <a className="btn btn-secondary d-block ml-auto" href="/add">
+      <Link className="btn btn-secondary d-block ml-auto" to="/add">
         Add task
-      </a>
+      </Link>
     </PageContainer>
   );
 }

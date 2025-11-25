@@ -21,3 +21,14 @@ export const filterSlice = createSlice({
   },
 });
 export const { setFilter } = filterSlice.actions;
+
+export const searchSlice = createSlice({
+  name: '@@search',
+  initialState: { value: '' },
+  reducers: {
+    setSearchFilter: (_, action) => {
+      return action.payload;
+    },
+  },
+});
+export const { setSearchFilter } = searchSlice.actions;

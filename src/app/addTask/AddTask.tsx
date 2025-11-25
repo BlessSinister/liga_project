@@ -1,22 +1,28 @@
 import React from 'react';
-import { useForm } from 'react-hook-form';
-
+import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
+
 import { useAddTaskMutation } from '../../api/tasksApi';
 import { Checkbox } from '../../components/Checkbox';
 import { PageContainer } from '../../components/PageContainer';
 import { TextField } from '../../components/TextField';
+
 import { schema } from './schema';
-import { AddFormInterface } from 'app/addTask/AddForm.types';
+import { AddFormInterface } from './AddForm.types';
 
 export default function AddTask() {
   const {
-    register,
+    control,
     handleSubmit,
     reset,
     formState: { errors },
   } = useForm<AddFormInterface>({
     resolver: yupResolver(schema),
+    defaultValues: {
+      name: '',
+      info: '',
+      isImportant: false,
+    },
   });
 
   const [addTask] = useAddTaskMutation();
@@ -24,7 +30,7 @@ export default function AddTask() {
   const onSubmit = async (data: AddFormInterface) => {
     console.log('Submitting:', data);
     try {
-      await addTask({ name: data.name, info: data.info, isImportant: data.isImportant }).unwrap();
+      await addTask(data).unwrap();
       console.log('Success:', data);
       reset();
     } catch (error) {
@@ -37,12 +43,26 @@ export default function AddTask() {
       <h1>TODO LIST | ADD TASK</h1>
 
       <form onSubmit={handleSubmit(onSubmit)}>
-        <TextField placeholder="Clean room" label="Task name" {...register('name')} />
+        <Controller
+          name="name"
+          control={control}
+          render={({ field }) => <TextField label="Task name" placeholder="Clean room" {...field} />}
+        />
         {errors.name && <p style={{ color: 'red' }}>{errors.name.message}</p>}
-        <TextField placeholder="Clean my room" label="What to do (description)" {...register('info')} />
+        <Controller
+          name="info"
+          control={control}
+          render={({ field }) => <TextField label="What to do (description)" placeholder="Clean my room" {...field} />}
+        />
         {errors.info && <p style={{ color: 'red' }}>{errors.info.message}</p>}
-        <Checkbox label="Important" {...register('isImportant')} />
 
+        <Controller
+          name="isImportant"
+          control={control}
+          render={({ field }) => (
+            <Checkbox label="Important" checked={field.value} onChange={(e) => field.onChange(e.target.checked)} />
+          )}
+        />
         <button type="submit" className="btn btn-secondary d-block ml-auto">
           Add task
         </button>

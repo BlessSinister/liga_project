@@ -2,15 +2,17 @@ import React from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 
-import { useAddTaskMutation } from '../../api/tasksApi';
+import { Link } from 'react-router-dom';
+import { useAddTaskMutation, useGetTasksQuery } from '../../api/tasksApi';
 import { Checkbox } from '../../components/Checkbox';
 import { PageContainer } from '../../components/PageContainer';
 import { TextField } from '../../components/TextField';
-
 import { schema } from './schema';
 import { AddFormInterface } from './AddForm.types';
 
 export default function AddTask() {
+  //@ts-ignore
+  const { refetch } = useGetTasksQuery();
   const {
     control,
     handleSubmit,
@@ -31,6 +33,7 @@ export default function AddTask() {
     console.log('Submitting:', data);
     try {
       await addTask(data).unwrap();
+      refetch();
       console.log('Success:', data);
       reset();
     } catch (error) {
@@ -40,6 +43,9 @@ export default function AddTask() {
 
   return (
     <PageContainer>
+      <Link to="/" className="btn btn-info">
+        Back
+      </Link>
       <h1>TODO LIST | ADD TASK</h1>
 
       <form onSubmit={handleSubmit(onSubmit)}>

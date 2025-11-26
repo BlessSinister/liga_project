@@ -1,29 +1,37 @@
 import React from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { useUpdateTaskMutation } from '../../../api/tasksApi';
+import { useGetTasksQuery, useUpdateTaskMutation } from '../../../api/tasksApi';
 import { EditSchema } from './schema';
 import { EditFormInterface } from './EditForm.types';
 import { TextField } from 'components/TextField';
 import { Checkbox } from 'components/Checkbox';
 import { PageContainer } from 'components/PageContainer';
 
-export default function EditForm({ task, id }) {
+export default function EditForm({ id }) {
   const [updateTask] = useUpdateTaskMutation();
+  const { refetch } = useGetTasksQuery();
   const {
     control,
     handleSubmit,
+    reset,
     formState: { errors },
-  } = useForm();
-  {
-    yupResolver(EditSchema);
-  }
-
+  } = useForm({
+    resolver: yupResolver(EditSchema),
+    defaultValues: {
+      name: '',
+      info: '',
+      isImportant: false,
+      isCompleted: false,
+    },
+  });
   const onSubmit = async (data) => {
     console.log({ id, body: data });
     try {
       await updateTask({ id, body: data }).unwrap();
       console.log('Updated!', data);
+      reset();
+      refetch();
     } catch (error) {
       console.error('Update error:', error);
     }
@@ -37,14 +45,14 @@ export default function EditForm({ task, id }) {
         <Controller
           name="name"
           control={control}
-          render={({ field }) => <TextField label="Name" placeholder="Fix bug #42" {...field} />}
+          render={({ field }) => <TextField label="Name" placeholder="Edit task name" {...field} />}
         />
         {errors.name && <p style={{ color: 'red' }}>{errors.name.message}</p>}
 
         <Controller
           name="info"
           control={control}
-          render={({ field }) => <TextField label="Info" placeholder="Steps to reproduce..." {...field} />}
+          render={({ field }) => <TextField label="Info" placeholder="Edit info about task" {...field} />}
         />
         {errors.info && <p style={{ color: 'red' }}>{errors.info.message}</p>}
 

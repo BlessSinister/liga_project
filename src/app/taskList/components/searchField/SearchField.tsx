@@ -28,19 +28,20 @@ function SearchField({ children }: any) {
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} style={{ display: 'flex' }}>
-      <Controller
-        name="value"
-        control={control}
-        render={({ field }) => (
-          <SearchInput value={field.value} onChange={field.onChange} onReset={() => reset()}>
-            {children}
-          </SearchInput>
-        )}
-      />
-
+    <div>
       {errors.value && <p style={{ color: 'red' }}>{errors.value.message}</p>}
-    </form>
+      <form onSubmit={handleSubmit(onSubmit)} style={{ display: 'flex' }}>
+        <Controller
+          name="value"
+          control={control}
+          render={({ field }) => (
+            <SearchInput value={field.value} onChange={field.onChange} onReset={() => reset()}>
+              {children}
+            </SearchInput>
+          )}
+        />
+      </form>
+    </div>
   );
 }
 

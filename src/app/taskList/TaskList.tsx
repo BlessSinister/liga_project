@@ -5,6 +5,8 @@ import { Link } from 'react-router-dom';
 import { useGetTasksQuery } from '../../api/tasksApi';
 import SearchField from './components/searchField/SearchField';
 import { AppTask } from './Task.types';
+import { TaskListItem } from './components/TaskListItem/TaskListItem';
+import styles from './TaskList.module.css';
 import { PageContainer } from 'components/PageContainer';
 import { getAllTodos } from 'app/store/reducers';
 import { Filter } from 'components/Filter';
@@ -38,20 +40,15 @@ function TaskList() {
   return (
     <PageContainer>
       <h1>TODO LIST</h1>
-      <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+      <div className={styles.filterWrapper}>
         <SearchField>
           <Filter />
         </SearchField>
       </div>
-      <div className="div" style={{ height: '400px', minHeight: '400px', overflow: 'auto' }}>
-        {filteredTodos.map((item: { id: number; name: string }, index: number) => (
+      <div className={styles.contentWrapper}>
+        {filteredTodos.map((item: { id: number; name: string; info: string }, index: number) => (
           <div key={index}>
-            <ul>
-              <li>
-                <Link to={`/edit/${item.id}`}>{item.name}</Link>
-              </li>
-              <li>{item.id}</li>
-            </ul>
+            <TaskListItem name={item.name} info={item.info} id={item.id} />
           </div>
         ))}
       </div>

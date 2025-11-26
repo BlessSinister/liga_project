@@ -6,6 +6,7 @@ import { useDispatch } from 'react-redux';
 import SearchFormInterface from './searchForm.types';
 import { schema } from './schema';
 
+import styles from './SearchFiled.module.css';
 import { SearchInput } from 'components/SearchInput';
 import { setSearchFilter } from 'app/store/reducers';
 
@@ -29,8 +30,8 @@ function SearchField({ children }: any) {
 
   return (
     <div>
-      {errors.value && <p style={{ color: 'red' }}>{errors.value.message}</p>}
-      <form onSubmit={handleSubmit(onSubmit)} style={{ display: 'flex' }}>
+      {errors.value && <p className={styles.error}>{errors.value.message}</p>}
+      <form onSubmit={handleSubmit(onSubmit)} className={styles.formWrapper}>
         <Controller
           name="value"
           control={control}

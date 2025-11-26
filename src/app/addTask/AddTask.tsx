@@ -9,10 +9,10 @@ import { PageContainer } from '../../components/PageContainer';
 import { TextField } from '../../components/TextField';
 import { schema } from './schema';
 import { AddFormInterface } from './AddForm.types';
+import styles from './AddTask.module.css';
 
 export default function AddTask() {
-  //@ts-ignore
-  const { refetch } = useGetTasksQuery();
+  const { refetch } = useGetTasksQuery(undefined);
   const {
     control,
     handleSubmit,
@@ -54,13 +54,13 @@ export default function AddTask() {
           control={control}
           render={({ field }) => <TextField label="Task name" placeholder="Clean room" {...field} />}
         />
-        {errors.name && <p style={{ color: 'red' }}>{errors.name.message}</p>}
+        {errors.name && <p className={styles.error}>{errors.name.message}</p>}
         <Controller
           name="info"
           control={control}
           render={({ field }) => <TextField label="What to do (description)" placeholder="Clean my room" {...field} />}
         />
-        {errors.info && <p style={{ color: 'red' }}>{errors.info.message}</p>}
+        {errors.info && <p className={styles.error}>{errors.info.message}</p>}
 
         <Controller
           name="isImportant"

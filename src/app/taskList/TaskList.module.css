@@ -1,0 +1,10 @@
+.filterWrapper {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+.contentWrapper {
+  height: 400px;
+  min-height: 400px;
+  overflow: auto;
+}

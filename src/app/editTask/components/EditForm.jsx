@@ -4,6 +4,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { useGetTasksQuery, useUpdateTaskMutation } from '../../../api/tasksApi';
 import { EditSchema } from './schema';
 import { EditFormInterface } from './EditForm.types';
+import styles from './EditForm.module.css';
 import { TextField } from 'components/TextField';
 import { Checkbox } from 'components/Checkbox';
 import { PageContainer } from 'components/PageContainer';
@@ -47,14 +48,14 @@ export default function EditForm({ id }) {
           control={control}
           render={({ field }) => <TextField label="Name" placeholder="Edit task name" {...field} />}
         />
-        {errors.name && <p style={{ color: 'red' }}>{errors.name.message}</p>}
+        {errors.name && <p className={styles.error}>{errors.name.message}</p>}
 
         <Controller
           name="info"
           control={control}
           render={({ field }) => <TextField label="Info" placeholder="Edit info about task" {...field} />}
         />
-        {errors.info && <p style={{ color: 'red' }}>{errors.info.message}</p>}
+        {errors.info && <p className={styles.error}>{errors.info.message}</p>}
 
         <Controller
           name="isImportant"

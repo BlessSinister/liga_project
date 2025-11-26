@@ -1,8 +1,9 @@
 import { createSlice } from '@reduxjs/toolkit';
+import { AppTask } from 'app/taskList/Task.types';
 
 export const todoSlice = createSlice({
   name: '@@todos',
-  initialState: [{ name: 'Not found' }],
+  initialState: [] as AppTask[],
   reducers: {
     getAllTodos: (state, action) => {
       return action.payload;
@@ -13,7 +14,7 @@ export const { getAllTodos } = todoSlice.actions;
 
 export const filterSlice = createSlice({
   name: '@@filter',
-  initialState: 'all',
+  initialState: 'active',
   reducers: {
     setFilter: (_, action) => {
       return action.payload;

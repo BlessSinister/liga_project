@@ -12,3 +12,6 @@ export const store = configureStore({
   middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(tasksApi.middleware),
   devTools: true,
 });
+
+export type RootState = ReturnType<typeof store.getState>;
+export type AppDispatch = typeof store.dispatch;
